@@ -3,6 +3,6 @@
 import licant
 
 licant.module("morpheus",
-    sources = ["morpheus/ModelServer.cpp"],
-    includes = ["."],
+    sources = ["morpheus/*.cpp"],
+    include_paths = ["."],
 )
