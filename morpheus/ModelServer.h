@@ -2,8 +2,10 @@
 #define MORHEUS_MODEL_SERVER_H
 
 #include <map>
+#include <nos/inet/tcp_server.h>
 #include <rabbit/mesh/mesh.h>
 #include <string>
+#include <thread>
 
 class BodyId
 {
@@ -49,6 +51,8 @@ public:
 class ModelServer
 {
     std::map<BodyId, Body> _models;
+    nos::inet::tcp_server _tcp_server;
+    std::thread _tcp_server_thread;
 
 public:
     ModelServer();
@@ -59,6 +63,12 @@ public:
     {
         return _models;
     }
+
+    void tcp_server_thread_func();
+    static void client_thread_func(nos::inet::tcp_client client);
+
+    void start_server();
+    void stop_server();
 };
 
 #endif

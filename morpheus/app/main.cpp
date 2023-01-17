@@ -22,6 +22,7 @@ int main(int argc, char **argv)
     Body model(mesh);
 
     ModelServer server;
+    server.start_server();
     server.add_model(BodyId("box"), model);
 
     SimpleView view(server);
