@@ -1,0 +1,6 @@
+#ifndef MORPHEUS_DEFS_H
+#define MORPHEUS_DEFS_H
+
+#define MORPHEUS_DEFAULT_PORT 18935
+
+#endif

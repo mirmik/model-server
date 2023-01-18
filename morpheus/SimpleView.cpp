@@ -49,19 +49,20 @@ void SimpleView::loop()
 
     float aspect = (float)WIDTH / (float)HEIGHT;
     rabbit::mat4f projection =
-        rabbit::opengl_perspective(rabbit::deg(100) / aspect, aspect, 0.1, 200);
+        rabbit::opengl_perspective(rabbit::deg(100) / aspect, aspect, 0.1, 400);
 
     while (!glfwWindowShouldClose(_window))
     {
         camera.set_camera(rabbit::vec3f{100.f * float(cos(glfwGetTime())),
                                         100.f * float(sin(glfwGetTime())),
-                                        10.f},
+                                        20.f},
                           {0, 0, 0});
 
         glfwPollEvents();
 
         drawer.clean(0.2f, 0.3f, 0.3f, 1.0f);
 
+        _server.lock();
         for (auto &[id, model] : _server.models())
         {
             drawer.draw_mesh(model.mesh(),
@@ -69,11 +70,26 @@ void SimpleView::loop()
                              camera.view_matrix(),
                              projection,
                              rabbit::vec4f{1.0f, 0.5f, 0.2f, 1.0f});
+
+            drawer.draw_mesh_edges(model.mesh().vertices(),
+                                   model.edges(),
+                                   model.pose_matrix(),
+                                   camera.view_matrix(),
+                                   projection,
+                                   rabbit::vec4f{0.0f, 0.0f, 0.0f, 1.0f});
         }
+        _server.unlock();
 
         glfwSwapBuffers(_window);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
+    if (_finalizer)
+        _finalizer();
     glfwTerminate();
+}
+
+void SimpleView::set_finalizer(std::function<void()> finalizer)
+{
+    _finalizer = finalizer;
 }

@@ -1,5 +1,6 @@
 #include <morpheus/ModelServer.h>
 #include <morpheus/SimpleView.h>
+#include <nos/trent/json_print.h>
 #include <rabbit/mesh/primitives.h>
 
 #define GLEW_STATIC
@@ -18,14 +19,11 @@
 
 int main(int argc, char **argv)
 {
-    rabbit::mesh<float> mesh = rabbit::box_mesh(10.f, 10.f, 10.f);
-    Body model(mesh);
-
     ModelServer server;
     server.start_server();
-    server.add_model(BodyId("box"), model);
 
     SimpleView view(server);
+    view.set_finalizer([&server]() { server.stop_server(); });
     view.init();
     view.loop();
     return 0;

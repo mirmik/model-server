@@ -14,6 +14,7 @@ class SimpleView
     ModelServer &_server;
     GLFWwindow *_window;
     const GLuint WIDTH = 1600, HEIGHT = 800;
+    std::function<void()> _finalizer;
 
 public:
     rabbit::opengl_drawer drawer;
@@ -25,6 +26,7 @@ public:
     void init();
     void draw();
     void loop();
+    void set_finalizer(std::function<void()> finalizer);
 
     GLFWwindow *window()
     {
