@@ -66,14 +66,16 @@ void ModelServer::start_server()
     _tcp_server_thread = std::thread([this]() { tcp_server_thread_func(); });
 }
 
+#define BUF_SIZE 128000
 void ModelServer::client_thread_func(nos::inet::tcp_client client,
                                      ModelServer *server)
 {
-    char buffer[10240];
+    char buffer[BUF_SIZE];
     while (1)
     {
-        memset(buffer, 0, 1024);
-        auto ret = nos::read_paired_from(client, buffer, 10240, '{', '}', true);
+        memset(buffer, 0, BUF_SIZE);
+        auto ret =
+            nos::read_paired_from(client, buffer, BUF_SIZE, '{', '}', true);
         if (!ret)
         {
             std::cout << "Client disconnected" << std::endl;
@@ -87,8 +89,8 @@ void ModelServer::client_thread_func(nos::inet::tcp_client client,
             return;
         }
 
+        std::cout << "Received: " << std::string(buffer, len) << std::endl;
         auto tr = nos::json::parse(buffer);
-        std::cout << "Received: " << nos::json::to_string(tr) << std::endl;
         // to trent
 
         // execute

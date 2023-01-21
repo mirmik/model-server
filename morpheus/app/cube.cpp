@@ -42,11 +42,11 @@ int main(int argc, char **argv)
     rabbit::mesh<float> mesh;
     if (body == "box")
     {
-        mesh = rabbit::box_mesh(10.f, 10.f, 10.f);
+        mesh = rabbit::box_mesh(0.1f, 0.1f, 0.1f);
     }
     else if (body == "sphere")
     {
-        mesh = rabbit::sphere_mesh(10.f, 10, 10);
+        mesh = rabbit::sphere_mesh(0.1, 10, 10);
     }
 
     auto mesh_trent = mesh.to_trent();
@@ -63,7 +63,7 @@ int main(int argc, char **argv)
     json["args"][2] = (trans * rot).to_trent();
 
     auto client =
-        nos::inet::tcp_client::dial("127.0.0.1", MORPHEUS_DEFAULT_PORT);
+        nos::inet::tcp_client::dial("192.168.1.149", MORPHEUS_DEFAULT_PORT);
 
     auto json_str = nos::json::to_string(json);
     nos::print_to(client, json_str);
